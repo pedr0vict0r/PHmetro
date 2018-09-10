@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
         if (btAdapter == null) {
             statusMessage.setText("Que pena! Hardware Bluetooth não está funcionando :(");
         } else {
-            statusMessage.setText("Ótimo! Hardware Bluetooth está funcionando :)");
+            statusMessage.setText("Ótimo! Hardware Bluetooth está funcionando :D");
         }
 
         /* A chamada do seguinte método liga o Bluetooth no dispositivo Android
