@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.UUID;
 
+
 public class ConnectionThread extends Thread{
 
     BluetoothSocket btSocket = null;
@@ -28,7 +29,6 @@ public class ConnectionThread extends Thread{
     /*  Este construtor prepara o dispositivo para atuar como servidor.
      */
     public ConnectionThread() {
-
         this.server = true;
     }
 

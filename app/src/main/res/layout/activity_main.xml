@@ -32,4 +32,34 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textColor="#ffffffff"/>
+
+    <Button
+        android:id="@+id/button_PairedDevices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="163dp"
+        android:onClick="searchPairedDevices"
+        android:text="dispositivos pareados" />
+
+    <Button
+        android:id="@+id/button_DiscoveredDevices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="160dp"
+        android:text="buscar dispositivos"
+        android:onClick="discoverDevices"/>
+
+    <Button
+        android:id="@+id/button_Visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:text="habilitar visibilidade"
+        android:onClick="enableVisibility"/>
 </RelativeLayout>

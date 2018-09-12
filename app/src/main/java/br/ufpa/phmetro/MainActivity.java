@@ -3,6 +3,7 @@ package br.ufpa.phmetro;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +19,10 @@ public class MainActivity extends Activity {
         counterMessage mostrará o valor do contador como recebido do Arduino
         connect é a thread de gerenciamento da conexão Bluetooth
      */
+    public static int ENABLE_BLUETOOTH = 1;
+    public static int SELECT_PAIRED_DEVICE = 2;
+    public static int SELECT_DISCOVERED_DEVICE = 3;
+
     static TextView statusMessage;
     static TextView counterMessage;
     ConnectionThread connect;
@@ -57,8 +62,8 @@ public class MainActivity extends Activity {
             O app iniciará e vai automaticamente buscar por esse endereço.
             Caso não encontre, dirá que houve um erro de conexão.
          */
-        connect = new ConnectionThread("20:14:12:03:17:31");
-        connect.start();
+        //connect = new ConnectionThread(DevAddress);//"20:14:12:03:17:31");
+        //connect.start();
 
         /* Um descanso rápido, para evitar bugs esquisitos.
          */
@@ -92,6 +97,7 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+
     public static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -114,7 +120,6 @@ public class MainActivity extends Activity {
             else if(dataString.equals("---S"))
                 statusMessage.setText("Conectado :D");
             else {
-
                 /* Se a mensagem não for um código de status,
                     então ela deve ser tratada pelo aplicativo
                     como uma mensagem vinda diretamente do outro
@@ -128,6 +133,8 @@ public class MainActivity extends Activity {
         }
     };
 
+
+
     /* Esse método é invocado sempre que o usuário clicar na TextView
         que contem o contador. O app Android transmite a string "restart",
         seguido de uma quebra de linha, que é o indicador de fim de mensagem.
@@ -135,4 +142,50 @@ public class MainActivity extends Activity {
     public void restartCounter(View view) {
         connect.write("restart\n".getBytes());
     }
+
+    public void searchPairedDevices(View view) {
+
+        Intent searchPairedDevicesIntent = new Intent(this, PairedDevices.class);
+        startActivityForResult(searchPairedDevicesIntent, SELECT_PAIRED_DEVICE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == ENABLE_BLUETOOTH) {
+            if(resultCode == RESULT_OK) {
+                statusMessage.setText("Bluetooth ativado :D");
+            }
+            else {
+                statusMessage.setText("Bluetooth não ativado :(");
+            }
+        }
+        else if(requestCode == SELECT_PAIRED_DEVICE || requestCode == SELECT_DISCOVERED_DEVICE) {
+            if(resultCode == RESULT_OK) {
+                statusMessage.setText("Você selecionou " + data.getStringExtra("btDevName") + "\n"
+                        + data.getStringExtra("btDevAddress"));
+
+                connect = new ConnectionThread(data.getStringExtra("btDevAddress"));
+                connect.start();
+
+            }
+            else {
+                statusMessage.setText("Nenhum dispositivo selecionado :(");
+            }
+        }
+    }
+
+    public void discoverDevices(View view) {
+
+        Intent searchPairedDevicesIntent = new Intent(this, DiscoveredDevices.class);
+        startActivityForResult(searchPairedDevicesIntent, SELECT_DISCOVERED_DEVICE);
+    }
+
+    public void enableVisibility(View view) {
+
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 30);
+        startActivity(discoverableIntent);
+    }
+
 }
