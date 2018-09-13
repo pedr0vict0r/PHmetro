@@ -1,0 +1,75 @@
+#include <SoftwareSerial.h>
+
+/* Definição de um objeto SoftwareSerial.
+ * Usaremos os pinos 18 e 17, como RX e TX, respectivamente.
+ */
+SoftwareSerial serial(18, 17);
+
+
+/* A String data será utilizada para armazenar dados vindos
+ *  do Android. O inteiro counter será incrementado a cada
+ *  execução do loop principal e transmitido ao Android.
+ *  O led conectado ao pino 2 é mais para debug. É útil.
+ */
+String data = "";
+int counter = 0;
+//int led = 2;
+
+/* Nosso setup inclui a inicialização do objeto SoftwareSerial,
+ *  com uma baud rate de 9600 bps. A definição do pino do led
+ *  como saída e um delay de 2 segundos, só para garantir que
+ *  o módulo HC-06 iniciou direitinho.
+ */
+void setup() {
+  serial.begin(9600);
+  //pinMode(led, OUTPUT);
+  delay(2000);
+  pinMode(19, OUTPUT);
+  pinMode(20, OUTPUT);
+  digitalWrite(19, LOW);
+  digitalWrite(20, HIGH);
+}
+
+/* Vamos pelo loop passo a passo.
+ */
+void loop() {
+  /* No início de cada loop, verificamos se há algo no buffer
+   *  da nossa serial. Se houver bytes disponíveis, significa 
+   *  que o Android enviou algo, então faremos a leitura do 
+   *  novo caractere e adicionamos ao final da string data.
+   */
+  while(serial.available() > 0) {
+    data += char(serial.read());
+  }
+
+  /* Se o Arduino receber a string "restart" seguida de uma
+   *  quebra de linha, reinicializamos o contador e ligamos
+   *  o led por um segundo. Esse comando indicará que a 
+   *  comunicação no sentido Android -> Arduino está sendo 
+   *  realizada corretamente.
+   */
+  if(data == "restart\n") {
+  //  digitalWrite(led, HIGH);
+    counter = 0;
+    delay(1000);
+  //  digitalWrite(led, LOW);
+  }
+
+  /* Ao fim de cada loop, o Arduino transmite uma string
+   *  representando o valor armazenado no contador, seguido
+   *  de uma quebra de linha. Essa string será enviada para o
+   *  módulo HC-06 e daí para o Android.
+   */
+  serial.print(String(counter));
+  //serial.print(String(TempValue));
+  serial.print('\n');
+
+  /* Finalmente, incrementamos o contador e limpamos data.
+   */
+  counter = counter + 1;
+  data = "";
+
+  /* Um pequeno delay para evitar bugs estranhos.
+   */
+  delay(10);
+}
