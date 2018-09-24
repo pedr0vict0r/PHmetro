@@ -25,11 +25,6 @@
             android:label="Paired Devices"
             android:parentActivityName=".MainActivity" >
         </activity>
-        <activity
-            android:name=".DiscoveredDevices"
-            android:label="Discovered Devices"
-            android:parentActivityName=".MainActivity" >
-        </activity>
     </application>
 
 </manifest>

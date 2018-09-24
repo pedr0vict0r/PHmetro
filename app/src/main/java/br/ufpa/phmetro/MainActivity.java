@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -24,7 +25,8 @@ public class MainActivity extends Activity {
     public static int SELECT_DISCOVERED_DEVICE = 3;
 
     static TextView statusMessage;
-    static TextView counterMessage;
+    static TextView viewTemp;
+    static TextView viewPH;
     ConnectionThread connect;
 
     @Override
@@ -36,7 +38,8 @@ public class MainActivity extends Activity {
             representações em Java.
          */
         statusMessage = (TextView) findViewById(R.id.statusMessage);
-        counterMessage = (TextView) findViewById(R.id.counterMessage);
+        viewTemp = (TextView) findViewById(R.id.viewTemp);
+        viewPH = (TextView) findViewById(R.id.viewPH);
 
         /* Teste rápido. O hardware Bluetooth do dispositivo Android
             está funcionando ou está bugado de forma misteriosa?
@@ -56,14 +59,6 @@ public class MainActivity extends Activity {
             pessoas, não faça isso.
          */
         btAdapter.enable();
-
-        /* Definição da thread de conexão como cliente.
-            Aqui, você deve incluir o endereço MAC do seu módulo Bluetooth.
-            O app iniciará e vai automaticamente buscar por esse endereço.
-            Caso não encontre, dirá que houve um erro de conexão.
-         */
-        //connect = new ConnectionThread(DevAddress);//"20:14:12:03:17:31");
-        //connect.start();
 
         /* Um descanso rápido, para evitar bugs esquisitos.
          */
@@ -120,6 +115,13 @@ public class MainActivity extends Activity {
             else if(dataString.equals("---S"))
                 statusMessage.setText("Conectado :D");
             else {
+                if(dataString.contains("PH")){
+                    viewPH.setText(dataString);
+                }else{
+                    if(dataString.contains("T")) {
+                        viewTemp.setText(dataString);
+                    }
+                }
                 /* Se a mensagem não for um código de status,
                     então ela deve ser tratada pelo aplicativo
                     como uma mensagem vinda diretamente do outro
@@ -127,7 +129,6 @@ public class MainActivity extends Activity {
                     atualizamos o valor contido no TextView do
                     contador.
                  */
-                counterMessage.setText(dataString);
             }
 
         }
@@ -140,7 +141,13 @@ public class MainActivity extends Activity {
         seguido de uma quebra de linha, que é o indicador de fim de mensagem.
      */
     public void restartCounter(View view) {
-        connect.write("restart\n".getBytes());
+        try{
+            connect.write("restart\n".getBytes());
+        }catch (Exception e){
+            Toast.makeText(this,"Modulo Bluetooth não conectado", Toast.LENGTH_LONG).show();
+
+        }
+
     }
 
     public void searchPairedDevices(View view) {
@@ -173,19 +180,6 @@ public class MainActivity extends Activity {
                 statusMessage.setText("Nenhum dispositivo selecionado :(");
             }
         }
-    }
-
-    public void discoverDevices(View view) {
-
-        Intent searchPairedDevicesIntent = new Intent(this, DiscoveredDevices.class);
-        startActivityForResult(searchPairedDevicesIntent, SELECT_DISCOVERED_DEVICE);
-    }
-
-    public void enableVisibility(View view) {
-
-        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 30);
-        startActivity(discoverableIntent);
     }
 
 }
