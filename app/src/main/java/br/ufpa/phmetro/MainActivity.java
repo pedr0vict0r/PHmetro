@@ -7,11 +7,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.logging.Logger;
+
+import br.ufpa.phmetro.ConnectionThread;
 
 public class MainActivity extends Activity {
 
@@ -27,6 +33,9 @@ public class MainActivity extends Activity {
     static TextView statusMessage;
     static TextView viewTemp;
     static TextView viewPH;
+
+    Button button_calibPH1, button_calibPH7;
+
     ConnectionThread connect;
 
     @Override
@@ -40,6 +49,8 @@ public class MainActivity extends Activity {
         statusMessage = (TextView) findViewById(R.id.statusMessage);
         viewTemp = (TextView) findViewById(R.id.viewTemp);
         viewPH = (TextView) findViewById(R.id.viewPH);
+        button_calibPH1 = (Button) findViewById(R. id.button_calibPH1);
+        button_calibPH7 = (Button) findViewById(R. id.button_calibPH7);
 
         /* Teste rápido. O hardware Bluetooth do dispositivo Android
             está funcionando ou está bugado de forma misteriosa?
@@ -182,4 +193,21 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void button_calibPH1(View view) {
+        try{
+            connect.write("1\n".getBytes());
+            Log.d("BYTE:","1\n".getBytes().toString());
+        }catch (Exception e){
+            Toast.makeText(this,"Modulo Bluetooth não conectado", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void button_calibPH7(View view) {
+        try{
+            connect.write("7\n".getBytes());
+            Log.d("BYTE:","7\n".getBytes().toString());
+        }catch (Exception e){
+            Toast.makeText(this,"Modulo Bluetooth não conectado", Toast.LENGTH_LONG).show();
+        }
+    }
 }
