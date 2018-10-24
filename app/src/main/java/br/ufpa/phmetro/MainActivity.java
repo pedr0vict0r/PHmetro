@@ -69,7 +69,15 @@ public class MainActivity extends Activity {
             faremos isso. Na prática, em um app que vai ser usado por outras
             pessoas, não faça isso.
          */
-        btAdapter.enable();
+        //btAdapter.enable();
+
+        if(!btAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, ENABLE_BLUETOOTH);
+            statusMessage.setText("Solicitando ativação do Bluetooth...");
+        } else {
+            statusMessage.setText("Bluetooth já ativado :)");
+        }
 
         /* Um descanso rápido, para evitar bugs esquisitos.
          */
@@ -148,7 +156,7 @@ public class MainActivity extends Activity {
 
 
     /* Esse método é invocado sempre que o usuário clicar na TextView
-        que contem o contador. O app Android transmite a string "restart",
+        que contém o contador. O app Android transmite a string "restart",
         seguido de uma quebra de linha, que é o indicador de fim de mensagem.
      */
     public void restartCounter(View view) {
