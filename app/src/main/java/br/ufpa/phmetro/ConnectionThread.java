@@ -256,5 +256,5 @@ public class ConnectionThread extends Thread{
 
     public boolean isConnected() {
         return this.isConnected;
-    }
+    }   //?????
 }
