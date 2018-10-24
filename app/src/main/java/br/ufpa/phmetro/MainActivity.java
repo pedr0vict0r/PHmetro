@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
     static TextView viewTemp;
     static TextView viewPH;
 
-    Button button_calibPH1, button_calibPH7;
+    Button button_calibPH4, button_calibPH7;
 
     ConnectionThread connect;
 
@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
         statusMessage = (TextView) findViewById(R.id.statusMessage);
         viewTemp = (TextView) findViewById(R.id.viewTemp);
         viewPH = (TextView) findViewById(R.id.viewPH);
-        button_calibPH1 = (Button) findViewById(R. id.button_calibPH1);
+        button_calibPH4 = (Button) findViewById(R. id.button_calibPH4);
         button_calibPH7 = (Button) findViewById(R. id.button_calibPH7);
 
         /* Teste rápido. O hardware Bluetooth do dispositivo Android
