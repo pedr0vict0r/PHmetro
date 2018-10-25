@@ -12,7 +12,7 @@
     android:background="#fde64b"
     android:onClick="restartCounter">
 
-
+<!--
     <TextView
         android:id="@+id/viewTemp"
         android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
         android:layout_centerInParent="true"
         android:text="TEMP"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
+-->
     <TextView
         android:id="@+id/viewPH"
         android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"
-        android:text="Hey there!"
+        android:text="pHmetro"
         android:textColor="#ffffffff" />
 
     <Button
@@ -51,7 +51,7 @@
         android:layout_marginTop="58dp"
         android:onClick="searchPairedDevices"
         android:text="dispositivos pareados" />
-
+<!--
     <Button
         android:id="@+id/button_calibPH4"
         style="@android:style/Widget.Material.Button.Colored"
@@ -72,5 +72,5 @@
         android:layout_marginTop="146dp"
         android:onClick="button_calibPH7"
         android:text="Calibrar Sonda PH7" />
-
+-->
 </RelativeLayout>

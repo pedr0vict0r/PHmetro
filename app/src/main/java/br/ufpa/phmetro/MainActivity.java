@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.util.logging.Logger;
 
 import br.ufpa.phmetro.ConnectionThread;
+import br.ufpa.phmetro.FileStorage;
 
 public class MainActivity extends Activity {
 
@@ -47,10 +48,10 @@ public class MainActivity extends Activity {
             representações em Java.
          */
         statusMessage = (TextView) findViewById(R.id.statusMessage);
-        viewTemp = (TextView) findViewById(R.id.viewTemp);
+        //viewTemp = (TextView) findViewById(R.id.viewTemp);
         viewPH = (TextView) findViewById(R.id.viewPH);
-        button_calibPH4 = (Button) findViewById(R. id.button_calibPH4);
-        button_calibPH7 = (Button) findViewById(R. id.button_calibPH7);
+        //button_calibPH4 = (Button) findViewById(R. id.button_calibPH4);
+        //button_calibPH7 = (Button) findViewById(R. id.button_calibPH7);
 
         /* Teste rápido. O hardware Bluetooth do dispositivo Android
             está funcionando ou está bugado de forma misteriosa?
@@ -136,11 +137,11 @@ public class MainActivity extends Activity {
             else {
                 if(dataString.contains("PH")){
                     viewPH.setText(dataString);
-                }else{
-                    if(dataString.contains("T")) {
-                        viewTemp.setText(dataString);
-                    }
-                }
+                }//else{
+                 //   if(dataString.contains("T")) {
+                     //   viewTemp.setText(dataString);
+                 //   }
+                //}
                 /* Se a mensagem não for um código de status,
                     então ela deve ser tratada pelo aplicativo
                     como uma mensagem vinda diretamente do outro
@@ -161,7 +162,12 @@ public class MainActivity extends Activity {
      */
     public void restartCounter(View view) {
         try{
-            connect.write("restart\n".getBytes());
+            //connect.write("restart\n".getBytes());
+            if (FileStorage.saveToFile( viewPH.getText().toString())){
+                Toast.makeText(MainActivity.this,"Saved to file",Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(MainActivity.this,"Error save file!!!",Toast.LENGTH_SHORT).show();
+            }
         }catch (Exception e){
             Toast.makeText(this,"Modulo Bluetooth não conectado", Toast.LENGTH_LONG).show();
 
