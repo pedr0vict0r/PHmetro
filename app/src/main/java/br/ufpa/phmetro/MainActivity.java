@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import br.ufpa.phmetro.ConnectionThread;
@@ -34,6 +37,9 @@ public class MainActivity extends Activity {
     static TextView statusMessage;
     static TextView viewTemp;
     static TextView viewPH;
+
+    public String data_completa, hora_atual;
+    public Date data_atual;
 
     Button button_calibPH4, button_calibPH7;
 
@@ -87,6 +93,31 @@ public class MainActivity extends Activity {
         } catch (Exception E) {
             E.printStackTrace();
         }
+    }
+
+    public void tempo(){
+        try{
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            // OU
+            //SimpleDateFormat dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
+
+            Date data = new Date();
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(data);
+            data_atual = cal.getTime();
+
+            data_completa = dateFormat.format(data_atual);
+
+            //hora_atual = dateFormat_hora.format(data_atual);
+
+            Log.i("data_completa", data_completa);
+            //Log.i("data_atual", data_atual.toString());
+            //Log.i("hora_atual", hora_atual); // Esse é o que você quer
+        }catch (Exception e){
+
+        }
+
     }
 
 
@@ -161,9 +192,10 @@ public class MainActivity extends Activity {
         seguido de uma quebra de linha, que é o indicador de fim de mensagem.
      */
     public void restartCounter(View view) {
+        tempo();
         try{
             //connect.write("restart\n".getBytes());
-            if (FileStorage.saveToFile( viewPH.getText().toString())){
+            if (FileStorage.saveToFile( viewPH.getText().toString() + ";" + data_completa)){
                 Toast.makeText(MainActivity.this,"Saved to file",Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(MainActivity.this,"Error save file!!!",Toast.LENGTH_SHORT).show();
