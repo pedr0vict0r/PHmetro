@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
     public static int SELECT_DISCOVERED_DEVICE = 3;
 
     static TextView statusMessage;
-    static TextView viewTemp;
+    //static TextView viewTemp;
     static TextView viewPH;
 
     public String data_completa, hora_atual;
@@ -239,10 +239,10 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void button_calibPH1(View view) {
+    public void button_calibPH4(View view) {
         try{
-            connect.write("1\n".getBytes());
-            Log.d("BYTE:","1\n".getBytes().toString());
+            connect.write("4\n".getBytes());
+            Log.d("BYTE:","4\n".getBytes().toString());
         }catch (Exception e){
             Toast.makeText(this,"Modulo Bluetooth não conectado", Toast.LENGTH_LONG).show();
         }
