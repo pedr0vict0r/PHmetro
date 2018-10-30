@@ -35,13 +35,10 @@ public class MainActivity extends Activity {
     public static int SELECT_DISCOVERED_DEVICE = 3;
 
     static TextView statusMessage;
-    //static TextView viewTemp;
     static TextView viewPH;
 
-    public String data_completa, hora_atual;
+    public String data_completa;
     public Date data_atual;
-
-    Button button_calibPH4, button_calibPH7;
 
     ConnectionThread connect;
 
@@ -54,10 +51,8 @@ public class MainActivity extends Activity {
             representações em Java.
          */
         statusMessage = (TextView) findViewById(R.id.statusMessage);
-        //viewTemp = (TextView) findViewById(R.id.viewTemp);
+
         viewPH = (TextView) findViewById(R.id.viewPH);
-        //button_calibPH4 = (Button) findViewById(R. id.button_calibPH4);
-        //button_calibPH7 = (Button) findViewById(R. id.button_calibPH7);
 
         /* Teste rápido. O hardware Bluetooth do dispositivo Android
             está funcionando ou está bugado de forma misteriosa?
@@ -168,11 +163,9 @@ public class MainActivity extends Activity {
             else {
                 if(dataString.contains("PH")){
                     viewPH.setText(dataString);
-                }//else{
-                 //   if(dataString.contains("T")) {
-                     //   viewTemp.setText(dataString);
-                 //   }
-                //}
+                }else{
+
+                }
                 /* Se a mensagem não for um código de status,
                     então ela deve ser tratada pelo aplicativo
                     como uma mensagem vinda diretamente do outro
@@ -236,24 +229,6 @@ public class MainActivity extends Activity {
             else {
                 statusMessage.setText("Nenhum dispositivo selecionado :(");
             }
-        }
-    }
-
-    public void button_calibPH4(View view) {
-        try{
-            connect.write("4\n".getBytes());
-            Log.d("BYTE:","4\n".getBytes().toString());
-        }catch (Exception e){
-            Toast.makeText(this,"Modulo Bluetooth não conectado", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void button_calibPH7(View view) {
-        try{
-            connect.write("7\n".getBytes());
-            Log.d("BYTE:","7\n".getBytes().toString());
-        }catch (Exception e){
-            Toast.makeText(this,"Modulo Bluetooth não conectado", Toast.LENGTH_LONG).show();
         }
     }
 }
