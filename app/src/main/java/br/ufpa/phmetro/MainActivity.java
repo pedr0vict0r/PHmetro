@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -15,15 +16,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.TimerTask;
+
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
 import java.util.logging.Logger;
 
 import br.ufpa.phmetro.ConnectionThread;
 import br.ufpa.phmetro.FileStorage;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity{
 
     /* Definição dos objetos que serão usados na Activity Principal
         statusMessage mostrará mensagens de status sobre a conexão
@@ -36,9 +42,17 @@ public class MainActivity extends Activity {
 
     static TextView statusMessage;
     static TextView viewPH;
+    static TextView acoes;
 
     public String data_completa;
     public Date data_atual;
+
+    public Button registroalimentacao;
+    public Button registrodeitar;
+    public Button registrosintomas;
+
+    public boolean alimento = false;
+    public boolean deitar = false;
 
     ConnectionThread connect;
 
@@ -47,6 +61,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*
+        String dir = Environment.getExternalStorageDirectory() + "/phmetro/recorder";
+        File f = new File(dir);
+        if(!f.isDirectory()) {
+            File newdir = new File(dir);
+            newdir.mkdirs();
+        } */
+
         /* Link entre os elementos da interface gráfica e suas
             representações em Java.
          */
@@ -54,9 +76,62 @@ public class MainActivity extends Activity {
 
         viewPH = (TextView) findViewById(R.id.viewPH);
 
+        acoes = (TextView) findViewById(R.id.acoes);
+
+        registroalimentacao = (Button) findViewById(R.id.button_registroalimentacao);
+
+        registrodeitar = (Button) findViewById(R.id.button_registrodeitar);
+
+        registrosintomas = (Button) findViewById(R.id.button_registrosintomas);
+
+        registroalimentacao.setOnClickListener(new Button.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                if (!alimento) {
+                    acoes.setText("Alimentação iniciada");
+                    alimento = true;
+                    salvar(acoes.getText().toString());
+
+                } else {
+                    acoes.setText("Alimentação finalizada");
+                    alimento = false;
+                    salvar(acoes.getText().toString());
+                }
+            }
+        }
+
+        );
+
+        registrodeitar.setOnClickListener(new Button.OnClickListener()
+         {
+             public void onClick(View v)
+             {
+                 if (!deitar) {
+                     acoes.setText("Paciente deitado");
+                     deitar = true;
+                     salvar(acoes.getText().toString());
+                 } else {
+                     acoes.setText("Paciente em pé");
+                     deitar = false;
+                     salvar(acoes.getText().toString());
+                 }
+             }
+         }
+
+        );
+
+        registrosintomas.setOnClickListener(new Button.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                acoes.setText("Registro de Sintoma");
+            }
+        }
+        );
+
         /* Teste rápido. O hardware Bluetooth do dispositivo Android
-            está funcionando ou está bugado de forma misteriosa?
-            Será que existe, pelo menos? Provavelmente existe.
+            está funcionando ou está bugado?
          */
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         if (btAdapter == null) {
@@ -64,14 +139,6 @@ public class MainActivity extends Activity {
         } else {
             statusMessage.setText("Ótimo! Hardware Bluetooth está funcionando :D");
         }
-
-        /* A chamada do seguinte método liga o Bluetooth no dispositivo Android
-            sem pedido de autorização do usuário. É altamente não recomendado no
-            Android Developers, mas, para simplificar este app, que é um demo,
-            faremos isso. Na prática, em um app que vai ser usado por outras
-            pessoas, não faça isso.
-         */
-        //btAdapter.enable();
 
         if(!btAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -81,7 +148,7 @@ public class MainActivity extends Activity {
             statusMessage.setText("Bluetooth já ativado :)");
         }
 
-        /* Um descanso rápido, para evitar bugs esquisitos.
+        /* Um descanso rápido, para evitar bugs.
          */
         try {
             Thread.sleep(1000);
@@ -113,6 +180,19 @@ public class MainActivity extends Activity {
 
         }
 
+    }
+
+    public void salvar(String texto){
+        tempo();
+        try{
+            if (FileStorage.saveToFile( texto + ";" + data_completa)){
+                Toast.makeText(MainActivity.this,"Salvo com sucesso!",Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(MainActivity.this,"Erro ao salvar!",Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e) {
+            Toast.makeText(MainActivity.this, "Erro ao salvar!", Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -185,19 +265,7 @@ public class MainActivity extends Activity {
         seguido de uma quebra de linha, que é o indicador de fim de mensagem.
      */
     public void restartCounter(View view) {
-        tempo();
-        try{
-            //connect.write("restart\n".getBytes());
-            if (FileStorage.saveToFile( viewPH.getText().toString() + ";" + data_completa)){
-                Toast.makeText(MainActivity.this,"Saved to file",Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(MainActivity.this,"Error save file!!!",Toast.LENGTH_SHORT).show();
-            }
-        }catch (Exception e){
-            Toast.makeText(this,"Modulo Bluetooth não conectado", Toast.LENGTH_LONG).show();
-
-        }
-
+        salvar(viewPH.getText().toString());
     }
 
     public void searchPairedDevices(View view) {
@@ -218,15 +286,13 @@ public class MainActivity extends Activity {
             }
         }
         else if(requestCode == SELECT_PAIRED_DEVICE || requestCode == SELECT_DISCOVERED_DEVICE) {
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 statusMessage.setText("Você selecionou " + data.getStringExtra("btDevName") + "\n"
                         + data.getStringExtra("btDevAddress"));
 
                 connect = new ConnectionThread(data.getStringExtra("btDevAddress"));
                 connect.start();
-
-            }
-            else {
+            } else {
                 statusMessage.setText("Nenhum dispositivo selecionado :(");
             }
         }
