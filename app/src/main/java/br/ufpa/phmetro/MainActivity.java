@@ -125,7 +125,7 @@ public class MainActivity extends Activity{
         {
             public void onClick(View v)
             {
-                acoes.setText("Registro de Sintoma");
+                acoes.setText("Registro de sintoma");
             }
         }
         );
@@ -257,7 +257,6 @@ public class MainActivity extends Activity{
 
         }
     };
-
 
 
     /* Esse método é invocado sempre que o usuário clicar na TextView
