@@ -28,9 +28,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="19dp"
         android:text="pHmetro"
-        android:textColor="#ffffffff" />
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/acoes"
@@ -38,9 +39,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="121dp"
-        android:text=""
-        android:textColor="#ffffffff" />
+        android:layout_marginBottom="91dp"
+        android:text="Ações (informações_exame)"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/button_PairedDevices"
@@ -57,8 +59,9 @@
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_registrodeitar"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="184dp"
         android:text="alimentação" />
 
     <Button
@@ -66,8 +69,9 @@
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/acoes"
+        android:layout_below="@+id/button_registroalimentacao"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="-184dp"
         android:text="deitar" />
 
     <Button
@@ -75,8 +79,9 @@
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_registroalimentacao"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="235dp"
         android:text="sintomas" />
 
 </RelativeLayout>
