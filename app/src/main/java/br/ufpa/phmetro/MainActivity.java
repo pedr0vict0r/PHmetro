@@ -50,21 +50,34 @@ public class MainActivity extends Activity{
         acoes = (TextView) findViewById(R.id.acoes);
 
         registrosintomas = (Button) findViewById(R.id.button_registrosintomas);
-        deitarSwitch = (Switch)  findViewById(R.id.switch_registroalimentacao);
-        alimentacaoSwitch = (Switch) findViewById(R.id.switch_registrodeitar);
+        deitarSwitch = (Switch)  findViewById(R.id.switch_registrodeitar);
+        alimentacaoSwitch = (Switch) findViewById(R.id.switch_registroalimentacao);
 
 
         deitarSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.v("Switch State=", ""+isChecked);
-                if (isChecked) {
-                    // send to arduino
-                    // deitar iniciado
+                tempo();
+                if (isChecked) { //deitado
+                    acoes.setText("Deitado\n"+data_completa);
+                    try{
+                        connect.write("Deitou: ".getBytes());
+                        connect.write(data_completa.getBytes());
+                        connect.write("\n".getBytes());
+                    }catch (Exception e){
 
-                } else {
-                    //send do arduino
-                    // deitar terminado
+                    }
+
+                } else { //em pe
+                    acoes.setText("Em pé\n"+data_completa);
+                    try{
+                        connect.write("Levantou: ".getBytes());
+                        connect.write(data_completa.getBytes());
+                        connect.write("\n".getBytes());
+                    }catch (Exception e){
+
+                    }
                 }
             }
 
@@ -74,13 +87,25 @@ public class MainActivity extends Activity{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.v("Switch State=", ""+isChecked);
-                if (isChecked) {
-                    // send to arduino
-                    // alimentação iniciada
+                tempo();
+                if (isChecked) { // alimentação iniciada
+                    acoes.setText("Alimentação Iniciada\n"+data_completa);
+                    try{
+                        connect.write("Alimentação Iniciada: ".getBytes());
+                        connect.write(data_completa.getBytes());
+                        connect.write("\n".getBytes());
+                    }catch (Exception e){
 
-                } else {
-                    //send do arduino
-                    // alimentação terminada
+                    }
+                } else { // alimentação terminada
+                    acoes.setText("Alimentação Finalizada\n"+data_completa);
+                    try{
+                        connect.write("Alimentação Finalizada: ".getBytes());
+                        connect.write(data_completa.getBytes());
+                        connect.write("\n".getBytes());
+                    }catch (Exception e){
+
+                    }
                 }
             }
 
@@ -92,6 +117,7 @@ public class MainActivity extends Activity{
             public void onClick(View v)
             {
                 acoes.setText("Registro de sintoma");
+                connect.write("Sintoma: \n".getBytes());
             }
         }
         );
