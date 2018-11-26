@@ -1,11 +1,9 @@
 package br.ufpa.phmetro;
 
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -13,29 +11,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.TimerTask;
 
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
-import java.util.logging.Logger;
-
-import br.ufpa.phmetro.ConnectionThread;
-import br.ufpa.phmetro.FileStorage;
 
 public class MainActivity extends Activity{
 
-    /* Definição dos objetos que serão usados na Activity Principal
-        statusMessage mostrará mensagens de status sobre a conexão
-        counterMessage mostrará o valor do contador como recebido do Arduino
-        connect é a thread de gerenciamento da conexão Bluetooth
-     */
     public static int ENABLE_BLUETOOTH = 1;
     public static int SELECT_PAIRED_DEVICE = 2;
     public static int SELECT_DISCOVERED_DEVICE = 3;
@@ -47,12 +33,8 @@ public class MainActivity extends Activity{
     public String data_completa;
     public Date data_atual;
 
-    public Button registroalimentacao;
-    public Button registrodeitar;
     public Button registrosintomas;
-
-    public boolean alimento = false;
-    public boolean deitar = false;
+    public Switch deitarSwitch, alimentacaoSwitch;
 
     ConnectionThread connect;
 
@@ -61,65 +43,49 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-        String dir = Environment.getExternalStorageDirectory() + "/phmetro/recorder";
-        File f = new File(dir);
-        if(!f.isDirectory()) {
-            File newdir = new File(dir);
-            newdir.mkdirs();
-        } */
-
-        /* Link entre os elementos da interface gráfica e suas
-            representações em Java.
-         */
         statusMessage = (TextView) findViewById(R.id.statusMessage);
 
         viewPH = (TextView) findViewById(R.id.viewPH);
 
         acoes = (TextView) findViewById(R.id.acoes);
 
-        registroalimentacao = (Button) findViewById(R.id.button_registroalimentacao);
-
-        registrodeitar = (Button) findViewById(R.id.button_registrodeitar);
-
         registrosintomas = (Button) findViewById(R.id.button_registrosintomas);
+        deitarSwitch = (Switch)  findViewById(R.id.switch_registroalimentacao);
+        alimentacaoSwitch = (Switch) findViewById(R.id.switch_registrodeitar);
 
-        registroalimentacao.setOnClickListener(new Button.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if (!alimento) {
-                    acoes.setText("Alimentação iniciada");
-                    alimento = true;
-                    salvar(acoes.getText().toString());
+
+        deitarSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.v("Switch State=", ""+isChecked);
+                if (isChecked) {
+                    // send to arduino
+                    // deitar iniciado
 
                 } else {
-                    acoes.setText("Alimentação finalizada");
-                    alimento = false;
-                    salvar(acoes.getText().toString());
+                    //send do arduino
+                    // deitar terminado
                 }
             }
-        }
 
-        );
+        });
 
-        registrodeitar.setOnClickListener(new Button.OnClickListener()
-         {
-             public void onClick(View v)
-             {
-                 if (!deitar) {
-                     acoes.setText("Paciente deitado");
-                     deitar = true;
-                     salvar(acoes.getText().toString());
-                 } else {
-                     acoes.setText("Paciente em pé");
-                     deitar = false;
-                     salvar(acoes.getText().toString());
-                 }
-             }
-         }
+        alimentacaoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.v("Switch State=", ""+isChecked);
+                if (isChecked) {
+                    // send to arduino
+                    // alimentação iniciada
 
-        );
+                } else {
+                    //send do arduino
+                    // alimentação terminada
+                }
+            }
+
+        });
+
 
         registrosintomas.setOnClickListener(new Button.OnClickListener()
         {
@@ -182,19 +148,6 @@ public class MainActivity extends Activity{
 
     }
 
-    public void salvar(String texto){
-        tempo();
-        try{
-            if (FileStorage.saveToFile( texto + ";" + data_completa)){
-                Toast.makeText(MainActivity.this,"Salvo com sucesso!",Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(MainActivity.this,"Erro ao salvar!",Toast.LENGTH_SHORT).show();
-            }
-        }catch (Exception e) {
-            Toast.makeText(MainActivity.this, "Erro ao salvar!", Toast.LENGTH_LONG).show();
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -205,10 +158,11 @@ public class MainActivity extends Activity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         //if (id == R.id.action_settings) {
@@ -264,11 +218,10 @@ public class MainActivity extends Activity{
         seguido de uma quebra de linha, que é o indicador de fim de mensagem.
      */
     public void restartCounter(View view) {
-        salvar(viewPH.getText().toString());
+        //do something
     }
 
     public void searchPairedDevices(View view) {
-
         Intent searchPairedDevicesIntent = new Intent(this, PairedDevices.class);
         startActivityForResult(searchPairedDevicesIntent, SELECT_PAIRED_DEVICE);
     }

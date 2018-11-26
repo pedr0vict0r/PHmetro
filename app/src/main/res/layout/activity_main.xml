@@ -9,7 +9,7 @@
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
     tools:context=".MainActivity"
-    android:background="#fde64b">
+    android:background="#fff">
 
     <TextView
         android:id="@+id/viewPH"
@@ -39,49 +39,44 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="91dp"
+        android:layout_marginBottom="73dp"
         android:text="Ações (informações_exame)"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
     <Button
         android:id="@+id/button_PairedDevices"
-        style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:onClick="searchPairedDevices"
-        android:text="dispositivos pareados" />
-
-    <Button
-        android:id="@+id/button_registroalimentacao"
-        style="@android:style/Widget.Material.Button.Colored"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="184dp"
-        android:text="alimentação" />
-
-    <Button
-        android:id="@+id/button_registrodeitar"
-        style="@android:style/Widget.Material.Button.Colored"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button_registroalimentacao"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-184dp"
-        android:text="deitar" />
+        android:text="dispositivos pareados"
+        android:layout_alignParentRight="true" />
 
     <Button
         android:id="@+id/button_registrosintomas"
-        style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="235dp"
-        android:text="sintomas" />
+        android:layout_marginBottom="126dp"
+        android:text="sintoma" />
+
+    <Switch
+        android:id="@+id/switch_registrodeitar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="193dp"
+        android:text="Deitado" />
+
+    <Switch
+        android:id="@+id/switch_registroalimentacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Alimentação" />
 
 </RelativeLayout>
