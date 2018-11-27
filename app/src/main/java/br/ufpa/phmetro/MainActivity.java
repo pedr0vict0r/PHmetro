@@ -1,11 +1,12 @@
 package br.ufpa.phmetro;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,47 +15,41 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainActivity extends Activity{
+public class MainActivity extends AppCompatActivity{
 
     public static int ENABLE_BLUETOOTH = 1;
     public static int SELECT_PAIRED_DEVICE = 2;
     public static int SELECT_DISCOVERED_DEVICE = 3;
-
-    static TextView statusMessage;
-    static TextView viewPH;
-    static TextView acoes;
-
+    @SuppressLint("StaticFieldLeak")
+    static TextView statusMessage, viewPH, acoes;
     public String data_completa;
     public Date data_atual;
-
     public Button registrosintomas;
     public Switch deitarSwitch, alimentacaoSwitch;
-
     ConnectionThread connect;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         statusMessage = (TextView) findViewById(R.id.statusMessage);
-
         viewPH = (TextView) findViewById(R.id.viewPH);
-
         acoes = (TextView) findViewById(R.id.acoes);
 
         registrosintomas = (Button) findViewById(R.id.button_registrosintomas);
         deitarSwitch = (Switch)  findViewById(R.id.switch_registrodeitar);
         alimentacaoSwitch = (Switch) findViewById(R.id.switch_registroalimentacao);
 
-
         deitarSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.v("Switch State=", ""+isChecked);
@@ -62,21 +57,21 @@ public class MainActivity extends Activity{
                 if (isChecked) { //deitado
                     acoes.setText("Deitado\n"+data_completa);
                     try{
-                        connect.write("Deitou: ".getBytes());
+                        connect.write("Deitou; ".getBytes());
                         connect.write(data_completa.getBytes());
                         connect.write("\n".getBytes());
                     }catch (Exception e){
-
+                        Toast.makeText(MainActivity.this,"Erro ao registrar, tente novamente.",Toast.LENGTH_LONG).show();
                     }
 
                 } else { //em pe
                     acoes.setText("Em pé\n"+data_completa);
                     try{
-                        connect.write("Levantou: ".getBytes());
+                        connect.write("Levantou; ".getBytes());
                         connect.write(data_completa.getBytes());
                         connect.write("\n".getBytes());
                     }catch (Exception e){
-
+                        Toast.makeText(MainActivity.this,"Erro ao registrar, tente novamente.",Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -84,6 +79,7 @@ public class MainActivity extends Activity{
         });
 
         alimentacaoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.v("Switch State=", ""+isChecked);
@@ -95,7 +91,7 @@ public class MainActivity extends Activity{
                         connect.write(data_completa.getBytes());
                         connect.write("\n".getBytes());
                     }catch (Exception e){
-
+                        Toast.makeText(MainActivity.this,"Erro ao registrar, tente novamente.",Toast.LENGTH_LONG).show();
                     }
                 } else { // alimentação terminada
                     acoes.setText("Alimentação Finalizada\n"+data_completa);
@@ -104,7 +100,7 @@ public class MainActivity extends Activity{
                         connect.write(data_completa.getBytes());
                         connect.write("\n".getBytes());
                     }catch (Exception e){
-
+                        Toast.makeText(MainActivity.this,"Erro ao registrar, tente novamente.",Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -113,13 +109,14 @@ public class MainActivity extends Activity{
 
 
         registrosintomas.setOnClickListener(new Button.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                acoes.setText("Registro de sintoma");
-                connect.write("Sintoma: \n".getBytes());
-            }
-        }
+                                            {
+                                                @SuppressLint("SetTextI18n")
+                                                public void onClick(View v)
+                                                {
+                                                    acoes.setText("Registro de sintoma");
+                                                    connect.write("Sintoma: \n".getBytes());
+                                                }
+                                            }
         );
 
         /* Teste rápido. O hardware Bluetooth do dispositivo Android
@@ -127,17 +124,19 @@ public class MainActivity extends Activity{
          */
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         if (btAdapter == null) {
-            statusMessage.setText("Que pena! Hardware Bluetooth não está funcionando :(");
+            statusMessage.setText("Que pena! Hardware Bluetooth não está funcionando");
         } else {
-            statusMessage.setText("Ótimo! Hardware Bluetooth está funcionando :D");
+            statusMessage.setText("Ótimo! Hardware Bluetooth está funcionando");
         }
 
-        if(!btAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, ENABLE_BLUETOOTH);
-            statusMessage.setText("Solicitando ativação do Bluetooth...");
-        } else {
-            statusMessage.setText("Bluetooth já ativado :)");
+        if (btAdapter != null) { //teste
+            if(!btAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, ENABLE_BLUETOOTH);
+                statusMessage.setText("Solicitando ativação do Bluetooth...");
+            } else {
+                statusMessage.setText("Bluetooth já ativado");
+            }
         }
 
         /* Um descanso rápido, para evitar bugs.
@@ -151,6 +150,7 @@ public class MainActivity extends Activity{
 
     public void tempo(){
         try{
+            @SuppressLint("SimpleDateFormat")
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             // OU
             //SimpleDateFormat dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
@@ -169,7 +169,7 @@ public class MainActivity extends Activity{
             //Log.i("data_atual", data_atual.toString());
             //Log.i("hora_atual", hora_atual); // Esse é o que você quer
         }catch (Exception e){
-
+            e.printStackTrace();
         }
 
     }
@@ -199,7 +199,9 @@ public class MainActivity extends Activity{
     }
 
 
+    @SuppressLint("HandlerLeak")
     public static Handler handler = new Handler() {
+        @SuppressLint("SetTextI18n")
         @Override
         public void handleMessage(Message msg) {
 
@@ -209,6 +211,7 @@ public class MainActivity extends Activity{
              */
             Bundle bundle = msg.getData();
             byte[] data = bundle.getByteArray("data");
+            assert data != null; //testar
             String dataString= new String(data);
 
             /* Aqui ocorre a decisão de ação, baseada na string
@@ -216,15 +219,14 @@ public class MainActivity extends Activity{
                 mensagens de status de conexão (iniciadas com --),
                 atualizamos o status da conexão conforme o código.
              */
-            if(dataString.equals("---N"))
-                statusMessage.setText("Ocorreu um erro durante a conexão D:");
-            else if(dataString.equals("---S"))
+
+            if(dataString.equals("---N")) {
+                statusMessage.setText("Ocorreu um erro durante a conexão");
+            } else if(dataString.equals("---S")) {
                 statusMessage.setText("Conectado :D");
-            else {
+            } else {
                 if(dataString.contains("PH")){
                     viewPH.setText(dataString);
-                }else{
-
                 }
                 /* Se a mensagem não for um código de status,
                     então ela deve ser tratada pelo aplicativo
@@ -238,29 +240,21 @@ public class MainActivity extends Activity{
         }
     };
 
-
-    /* Esse método é invocado sempre que o usuário clicar na TextView
-        que contém o contador. O app Android transmite a string "restart",
-        seguido de uma quebra de linha, que é o indicador de fim de mensagem.
-     */
-    public void restartCounter(View view) {
-        //do something
-    }
-
     public void searchPairedDevices(View view) {
         Intent searchPairedDevicesIntent = new Intent(this, PairedDevices.class);
         startActivityForResult(searchPairedDevicesIntent, SELECT_PAIRED_DEVICE);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(requestCode == ENABLE_BLUETOOTH) {
             if(resultCode == RESULT_OK) {
-                statusMessage.setText("Bluetooth ativado :D");
+                statusMessage.setText("Bluetooth ativado");
             }
             else {
-                statusMessage.setText("Bluetooth não ativado :(");
+                statusMessage.setText("Bluetooth não ativado");
             }
         }
         else if(requestCode == SELECT_PAIRED_DEVICE || requestCode == SELECT_DISCOVERED_DEVICE) {
@@ -271,7 +265,7 @@ public class MainActivity extends Activity{
                 connect = new ConnectionThread(data.getStringExtra("btDevAddress"));
                 connect.start();
             } else {
-                statusMessage.setText("Nenhum dispositivo selecionado :(");
+                statusMessage.setText("Nenhum dispositivo selecionado");
             }
         }
     }

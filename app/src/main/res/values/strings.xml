@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">PHmetro</string>
+    <string name="app_name">pHmetro Paciente</string>
+    <string name="ph">PH</string>
+    <string name="phmetro">pHmetro</string>
+    <string name="acoes"> </string>
+    <string name="dispositivos_pareados">dispositivos pareados</string>
+    <string name="sintoma">sintoma</string>
 </resources>

@@ -16,27 +16,24 @@ import java.util.UUID;
 
 public class ConnectionThread extends Thread{
 
-    BluetoothSocket btSocket = null;
-    BluetoothServerSocket btServerSocket = null;
-    InputStream input = null;
-    OutputStream output = null;
-    String btDevAddress = null;
-    String myUUID = "00001101-0000-1000-8000-00805F9B34FB";
-    boolean server;
-    boolean running = false;
-    boolean isConnected = false;
+    private BluetoothSocket btSocket = null;
+    private BluetoothServerSocket btServerSocket = null;
+    private OutputStream output = null;
+    private String btDevAddress;
+    private boolean server;
+    private boolean running = false;
+    private boolean isConnected = false;
 
     /*  Este construtor prepara o dispositivo para atuar como servidor.
-     */
     public ConnectionThread() {
         this.server = true;
-    }
+    }*/
 
     /*  Este construtor prepara o dispositivo para atuar como cliente.
         Tem como argumento uma string contendo o endereço MAC do dispositivo
     Bluetooth para o qual deve ser solicitada uma conexão.
      */
-    public ConnectionThread(String btDevAddress) {
+    ConnectionThread(String btDevAddress) {
 
         this.server = false;
         this.btDevAddress = btDevAddress;
@@ -56,6 +53,7 @@ public class ConnectionThread extends Thread{
         /*  Determina que ações executar dependendo se a thread está configurada
         para atuar como servidor ou cliente.
          */
+        String myUUID = "00001101-0000-1000-8000-00805F9B34FB";
         if(this.server) {
 
             /*  Servidor.
@@ -145,7 +143,7 @@ public class ConnectionThread extends Thread{
                 /*  Obtem referências para os fluxos de entrada e saída do
                 socket Bluetooth.
                  */
-                input = btSocket.getInputStream();
+                InputStream input = btSocket.getInputStream();
                 output = btSocket.getOutputStream();
 
                 /*  Permanece em estado de espera até que uma mensagem seja
@@ -256,5 +254,5 @@ public class ConnectionThread extends Thread{
 
     public boolean isConnected() {
         return this.isConnected;
-    }   //?????
+    }
 }

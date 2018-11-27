@@ -18,8 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="151dp"
-        android:onClick="restartCounter"
-        android:text="PH"
+        android:text="@string/ph"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <TextView
@@ -29,7 +28,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="19dp"
-        android:text="pHmetro"
+        android:text="@string/phmetro"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -40,7 +39,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="73dp"
-        android:text="Ações (informações_exame)"
+        android:text="@string/acoes"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -51,7 +50,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:onClick="searchPairedDevices"
-        android:text="dispositivos pareados"
+        android:text="@string/dispositivos_pareados"
         android:layout_alignParentRight="true" />
 
     <Button
@@ -61,7 +60,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="126dp"
-        android:text="sintoma" />
+        android:text="@string/sintoma" />
 
     <Switch
         android:id="@+id/switch_registrodeitar"
@@ -70,13 +69,15 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="193dp"
-        android:text="Deitado     " />
+        android:text="Deitado     "
+        tools:ignore="HardcodedText" />
 
     <Switch
         android:id="@+id/switch_registroalimentacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Alimentação  " />
+        android:text="Alimentação  "
+        tools:ignore="HardcodedText" />
 
 </RelativeLayout>
