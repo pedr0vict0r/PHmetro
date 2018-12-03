@@ -1,18 +1,23 @@
 package br.ufpa.phmetro;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -114,7 +119,8 @@ public class MainActivity extends AppCompatActivity{
                                                 public void onClick(View v)
                                                 {
                                                     acoes.setText("Registro de sintoma");
-                                                    connect.write("Sintoma: \n".getBytes());
+                                                    showInputDialog();
+
                                                 }
                                             }
         );
@@ -268,5 +274,46 @@ public class MainActivity extends AppCompatActivity{
                 statusMessage.setText("Nenhum dispositivo selecionado");
             }
         }
+    }
+
+    protected void showInputDialog() {
+
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+        View promptView = layoutInflater.inflate(R.layout.dialog_sintoma, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText editText = (EditText) promptView.findViewById(R.id.sintoma);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Registrar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //resultSintoma.setText("Hello, " + editText.getText());
+                        tempo();
+                        acoes.setText("Sintoma: "+editText.getText()+"\n"+data_completa);
+
+                        try{
+                            connect.write("Sintoma: ".getBytes());
+                            connect.write(String.valueOf(editText.getText()).getBytes());
+                            connect.write("; ".getBytes());
+                            connect.write(data_completa.getBytes());
+                            connect.write("\n".getBytes());
+                        }catch (Exception e){
+                            Toast.makeText(MainActivity.this,"Erro ao registrar, tente novamente.",Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                })
+                .setNegativeButton("Cancelar",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 }
