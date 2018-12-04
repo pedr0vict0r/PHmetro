@@ -1,7 +1,6 @@
 package br.ufpa.phmetro;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -226,14 +225,17 @@ public class MainActivity extends AppCompatActivity{
                 atualizamos o status da conexão conforme o código.
              */
 
-            if(dataString.equals("---N")) {
-                statusMessage.setText("Ocorreu um erro durante a conexão");
-            } else if(dataString.equals("---S")) {
-                statusMessage.setText("Conectado :D");
-            } else {
-                if(dataString.contains("PH")){
-                    viewPH.setText(dataString);
-                }
+            switch (dataString) {
+                case "---N":
+                    statusMessage.setText("Ocorreu um erro durante a conexão");
+                    break;
+                case "---S":
+                    statusMessage.setText("Conectado :D");
+                    break;
+                default:
+                    if (dataString.contains("PH")) {
+                        viewPH.setText(dataString);
+                    }
                 /* Se a mensagem não for um código de status,
                     então ela deve ser tratada pelo aplicativo
                     como uma mensagem vinda diretamente do outro
@@ -241,6 +243,7 @@ public class MainActivity extends AppCompatActivity{
                     atualizamos o valor contido no TextView do
                     contador.
                  */
+                    break;
             }
 
         }
@@ -288,8 +291,9 @@ public class MainActivity extends AppCompatActivity{
         // setup a dialog window
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("Registrar", new DialogInterface.OnClickListener() {
+                    @SuppressLint("SetTextI18n")
                     public void onClick(DialogInterface dialog, int id) {
-                        //resultSintoma.setText("Hello, " + editText.getText());
+
                         tempo();
                         acoes.setText("Sintoma: "+editText.getText()+"\n"+data_completa);
 

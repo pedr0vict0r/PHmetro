@@ -4,7 +4,8 @@
     <string name="phmetro">pHmetro</string>
     <string name="acoes"> </string>
     <string name="dispositivos_pareados">dispositivos pareados</string>
-    <string name="sintoma">sintoma</string>
+    <string name="sintoma">Sintoma</string>
     <string name="registrar">Registrar</string>
     <string name="cancel">Cancelar</string>
+    <string name="registro_de_sintoma">Registro de Sintoma</string>
 </resources>

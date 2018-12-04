@@ -236,6 +236,7 @@ public class ConnectionThread extends Thread{
 
     /*  Método utilizado pela Activity principal para encerrar a conexão
      */
+
     public void cancel() {
 
         try {
