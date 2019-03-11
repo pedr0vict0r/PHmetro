@@ -29,7 +29,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="19dp"
-        android:text="@string/phmetro"
+        android:text="Status de conexão"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 

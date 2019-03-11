@@ -30,12 +30,14 @@ public class MainActivity extends AppCompatActivity{
     public static int ENABLE_BLUETOOTH = 1;
     public static int SELECT_PAIRED_DEVICE = 2;
     public static int SELECT_DISCOVERED_DEVICE = 3;
+
     @SuppressLint("StaticFieldLeak")
     static TextView statusMessage, viewPH, acoes;
     public String data_completa;
     public Date data_atual;
     public Button registrosintomas;
     public Switch deitarSwitch, alimentacaoSwitch;
+
     ConnectionThread connect;
 
     @SuppressLint("SetTextI18n")
@@ -129,9 +131,9 @@ public class MainActivity extends AppCompatActivity{
          */
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         if (btAdapter == null) {
-            statusMessage.setText("Que pena! Hardware Bluetooth não está funcionando");
+            statusMessage.setText("Hardware Bluetooth não está funcionando");
         } else {
-            statusMessage.setText("Ótimo! Hardware Bluetooth está funcionando");
+            statusMessage.setText("Hardware Bluetooth está funcionando");
         }
 
         if (btAdapter != null) { //teste
@@ -230,7 +232,7 @@ public class MainActivity extends AppCompatActivity{
                     statusMessage.setText("Ocorreu um erro durante a conexão");
                     break;
                 case "---S":
-                    statusMessage.setText("Conectado :D");
+                    statusMessage.setText("Conectado");
                     break;
                 default:
                     if (dataString.contains("PH")) {
