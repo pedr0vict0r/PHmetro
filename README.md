@@ -1,13 +1,19 @@
-# PHmetro
+# ArduinoPhMeter (PHMetro)
 
-## Introduction
+This project is build up a Arduino based portable device for Prolonged esophageal pH-metry.
 
-> An introduction or lead on what problem you're solving. Answer the question, "Why does someone need this?"
+Hardware that you should need is :
+  -  Arduino MEGA
+  -  LCD Keypad Shield
+  -  Bluetooh Module (HC-05)
+  -  Gyroscope Module (not implemented)
+  -  RTC Module
+  -  MicroSD Card Module
+  -  2x PH Meter Board
+  -  3D Printed Case (not implemented)
 
-## Code Samples
-
-> You've gotten their attention in the introduction, now show a few code examples. So they get a visualization and as a bonus, make them copy/paste friendly.
-
-## Installation
-
-> The installation instructions are low priority in the readme and should come at the bottom. The first part answers all their objections and now that they want to use it, show them how.
+Feature :
+  - Show real time PH reading.
+  - Use keypad for enter "Calibration Mode" for read the PH reading for PH calibration.
+  
+  - Serial Port communication via Arduino MEGA USB port, send command to MEGA for get back the PH reading.
